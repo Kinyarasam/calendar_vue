@@ -1,12 +1,13 @@
 <template>
     <div class="bg-gray-200 min-h-screen text-xs flex justify-center items-center font-mono">
         <div class="bg-white p-2 h-[450px] md:w-[500px] lg:w-[800px] w-72  rounded-xl shadow-md">
-            <div class="flex justify-center">
-                <div>
+            <div class="flex flex-col justify-center">
+                <!-- header -->
+                <header>
                     <div class="flex justify-center items-center md:text-5xl text-3xl text-teal-800 uppercase font-sans font-bold py-2 ">
                         {{ WeekDaysFullNames[currentDay] }}
                     </div>
-                    <div class="flex justify-center items-center shadow-inner rounded-xl text-slate-700">
+                    <div class="flex justify-center items-center rounded-xl text-slate-700">
                         <div class="flex flex-col px-1 items-center">
                             <span class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_up</span>
                             <span class="text-xl font-semibold py-1.5">
@@ -30,7 +31,28 @@
                         </div>
                         
                     </div>
-                </div>
+                </header>
+                <!-- /header -->
+
+                <!-- section -->
+                <section class="mt-16 px-2 lg:px-24">
+                    <div class=" font-semibold rounded-xl overflow-hidden p-1.5 shadow-inner">
+                        <div class="grid grid-cols-7 justify-center items-center">
+                            <div v-for="day in WeekDays" :key="day" class="shadow-inner">
+                                <div class="lg:w-[84px] md:w-[66px] w-[35px] border place-self-center p-2">
+                                    {{ day }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-7 items-center h-[180px] bg-gray-100 rounded-b-xl">
+                            <div></div>
+                            <div v-for="i in 31" :key="i" class="p-2">
+                                    {{i}}
+                            </div>
+                            <div></div>
+                        </div>
+                    </div>
+                </section>
             </div>
             
             <!-- <div class="flex border-b py-2 items-center">
@@ -70,6 +92,11 @@ export default {
             return new Date(
                 this.currentDate.year, this.currentDate.month, this.currentDate.date
             ).getDay()
+        },
+        currentMonthDays() {
+            return new Date(
+                this.currentDate.year, this.currentDate.month + 1, 0
+            ).getDate()
         }
     },
     methods: {
