@@ -45,11 +45,18 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-7 items-center h-[180px] bg-gray-100 rounded-b-xl">
-                            <div></div>
-                            <div v-for="i in 31" :key="i" class="p-2">
+                            <div class="text-slate-300" v-for="(n, index) in (firstMonthDay)" :key="'prev' + index">
+                                {{ (prevMonthDays) - firstMonthDay + n}}
+                            </div>
+                            <div v-for="(i, index) in currentMonthDays"  :key="'day' + index"
+                                :class="{ active: i === currentDate.date}"  
+                                class="p-2 font-semibold text-slate-900" 
+                            >
                                     {{i}}
                             </div>
-                            <div></div>
+                            <div class="text-slate-300" v-for="(n, index) in (35 - (currentMonthDays + firstMonthDay))" :key="'next' + index">
+                                {{n}}
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -84,10 +91,25 @@ export default {
                 month: 0,
                 year: 0
             },
-            DayOfTheWeek: []
+            DayOfTheWeek: [],
+            active: true,
         }
     },
     computed: {
+        prevMonthDays() {
+            const year = this.currentDate.month === 0 ? this.currentDate.year - 1 : this.currentDate.year
+            const month = this .currentDate.month === 0 ? 11 : this.currentDate.month
+
+            return new Date(year, month, 0).getDate()
+        },
+        firstMonthDay() {
+            const firstDay = new Date(this.currentDate.year, this.currentDate.month, 1).getDay()
+
+            if (firstDay === 0) 
+                firstDay = 7
+
+            return (firstDay)
+        },
         currentDay() {
             return new Date(
                 this.currentDate.year, this.currentDate.month, this.currentDate.date
@@ -137,5 +159,8 @@ export default {
 </script>
 
 <style scoped>
-
+.active {
+    background-color: #e33040;
+    color: #fff,
+}
 </style>
