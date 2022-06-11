@@ -9,25 +9,25 @@
                     </div>
                     <div class="flex justify-center items-center rounded-xl text-slate-700">
                         <div class="flex flex-col px-1 items-center">
-                            <span class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_up</span>
+                            <span @click="dateDown" class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_up</span>
                             <span class="text-xl font-semibold py-1.5">
                                 {{ currentDate.date }}
                             </span>
-                            <span class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_down</span>
+                            <span @click="dateUp" class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_down</span>
                         </div>
                         <div class="flex flex-col px-1 items-center">
-                            <span class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_up</span>
+                            <span @click="monthDown" class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_up</span>
                             <span class="text-xl font-semibold py-1.5">
                                 {{ month[currentDate.month] }}
                             </span>
-                            <span class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_down</span>
+                            <span @click="monthUp" class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_down</span>
                         </div>
                         <div class="flex flex-col px-1 items-center">
-                            <span class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_up</span>
+                            <span @click="currentDate.year -= 1" class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_up</span>
                             <span class="text-xl font-semibold py-1.5">
                                 {{ currentDate.year }}
                             </span>
-                            <span class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_down</span>
+                            <span @click="currentDate.year += 1" class="material-icons hover:bg-rose-500 text-rose-500 bg-gray-100 hover:text-white hover:shadow cursor-pointer w-6 h-6 flex items-center justify-center rounded-full">arrow_drop_down</span>
                         </div>
                         
                     </div>
@@ -38,23 +38,28 @@
                 <section class="mt-16 px-2 lg:px-24">
                     <div class=" font-semibold rounded-xl overflow-hidden p-1.5 shadow-inner">
                         <div class="grid grid-cols-7 justify-center items-center">
-                            <div v-for="day in WeekDays" :key="day" class="shadow-inner">
+                            <div v-for="day in WeekDays" :key="day" class="shadow-inner first:bg-red-500">
                                 <div class="lg:w-[84px] md:w-[66px] w-[35px] border place-self-center p-2">
                                     {{ day }}
                                 </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-7 items-center h-[180px] bg-gray-100 rounded-b-xl">
-                            <div class="text-slate-300" v-for="(n, index) in (firstMonthDay)" :key="'prev' + index">
+                        <div class="first:bg-red-500 grid grid-cols-7 items-center h-[180px] bg-gray-100 rounded-b-xl">
+                            <div 
+                                class="first:bg-red-500 border-2 text-slate-300 hover:bg-teal-800 hover:text-white p-2" 
+                                v-for="(n, index) in (firstMonthDay)" 
+                                :key="'prev' + index"
+                            >
                                 {{ (prevMonthDays) - firstMonthDay + n}}
                             </div>
                             <div v-for="(i, index) in currentMonthDays"  :key="'day' + index"
                                 :class="{ active: i === currentDate.date}"  
-                                class="p-2 font-semibold text-slate-900" 
+                                class="first:bg-red-500 border-2 p-2 font-semibold text-slate-900 hover:bg-teal-800 hover:text-white" 
                             >
+                            <!-- TODO: Add css To the last Day of the week -->
                                     {{i}}
                             </div>
-                            <div class="text-slate-300" v-for="(n, index) in (35 - (currentMonthDays + firstMonthDay))" :key="'next' + index">
+                            <div class="first:bg-red-500 border-2 text-slate-300 hover:bg-teal-800 hover:text-white p-2" v-for="(n, index) in (35 - (currentMonthDays + firstMonthDay))" :key="'next' + index">
                                 {{n}}
                             </div>
                         </div>
@@ -97,13 +102,13 @@ export default {
     },
     computed: {
         prevMonthDays() {
-            const year = this.currentDate.month === 0 ? this.currentDate.year - 1 : this.currentDate.year
-            const month = this .currentDate.month === 0 ? 11 : this.currentDate.month
+            let year = this.currentDate.month === 0 ? this.currentDate.year - 1 : this.currentDate.year
+            let month = this .currentDate.month === 0 ? 11 : this.currentDate.month
 
             return new Date(year, month, 0).getDate()
         },
         firstMonthDay() {
-            const firstDay = new Date(this.currentDate.year, this.currentDate.month, 1).getDay()
+            let firstDay = new Date(this.currentDate.year, this.currentDate.month, 1).getDay()
 
             if (firstDay === 0) 
                 firstDay = 7
@@ -122,6 +127,37 @@ export default {
         }
     },
     methods: {
+        dateUp() {
+            // console.log(this.currentMonthDays)            
+
+            if (this.currentDate.date == this.currentMonthDays) {
+                this.currentDate.date = 1
+                this.monthUp()
+            }
+            else{
+                this.currentDate.date += 1
+            }
+
+            console.log(this.currentDate.date)
+        },
+        dateDown() {
+            // console.log(this.currentMonthDays)            
+            if (this.currentDate.date === 1) {
+                this.currentDate.date = this.prevMonthDays
+                this.monthDown()
+
+                console.log(this.currentDate.date)
+            }
+            else{
+                this.currentDate.date -= 1
+            }
+        },
+        monthUp() {
+            this.currentDate.month += 1
+        },
+        monthDown() {
+            this.currentDate.month -= 1
+        },
         getCurrentDate() {
             let today = new Date()
 
@@ -129,31 +165,9 @@ export default {
             this.currentDate.month = today.getMonth()
             this.currentDate.year = today.getFullYear()
         },
-        getWeekday() {
-            const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-            const d = new Date()
-            let day = weekday[d.getDay()]
-
-            // this.DaysOfTheWeek = day
-            console.log(day)
-        },
-        getyear() {
-
-            // const year = new Date().getFullYear(),
-            // console.log(year)
-        },
-        getNumberOfDays() {
-            const year = new Date().getFullYear()
-            const month = new Date().getMonth()
-
-            const NumDays = new Date(year, (month + 1), 0).getDate();
-            console.log(`Month ${month + 1} has ${NumDays} days`)
-        }
     },
-    mounted() {
-        this.getCurrentDate()
-        this.getWeekday() 
-        this.getNumberOfDays()      
+    created() {
+        this.getCurrentDate()     
     },
 }
 </script>
